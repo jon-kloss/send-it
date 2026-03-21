@@ -2,8 +2,13 @@ import { Allotment } from "allotment";
 import "allotment/dist/style.css";
 import Terminal from "./components/Terminal";
 import Preview from "./components/Preview";
+import { useSocket } from "./hooks/useSocket";
+import { useFiles } from "./hooks/useFiles";
 
 export default function App() {
+  const { send, connected, addMessageHandler } = useSocket();
+  const files = useFiles(addMessageHandler, connected);
+
   return (
     <div
       style={{
@@ -15,10 +20,14 @@ export default function App() {
     >
       <Allotment defaultSizes={[50, 50]}>
         <Allotment.Pane minSize={300}>
-          <Terminal />
+          <Terminal
+            send={send}
+            connected={connected}
+            addMessageHandler={addMessageHandler}
+          />
         </Allotment.Pane>
         <Allotment.Pane minSize={300}>
-          <Preview />
+          <Preview files={files} />
         </Allotment.Pane>
       </Allotment>
     </div>

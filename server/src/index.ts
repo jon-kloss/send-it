@@ -1,17 +1,24 @@
 import express from "express";
+import cors from "cors";
 import { createServer } from "node:http";
 import { WebSocketServer, WebSocket } from "ws";
 import {
   handleTerminalConnection,
   cleanupAllSessions,
   getActiveSessionCount,
+  getWorkspaceDir,
 } from "./pty.js";
+import {
+  startWatching,
+  stopWatching,
+  readAllFiles,
+} from "./fileWatcher.js";
 
 const PORT = parseInt(process.env.PORT || "3001", 10);
 const HEARTBEAT_INTERVAL = 30_000;
-const HEARTBEAT_TIMEOUT = 10_000;
 
 const app = express();
+app.use(cors());
 const httpServer = createServer(app);
 
 // Health check endpoint
@@ -22,11 +29,56 @@ app.get("/health", (_req, res) => {
   });
 });
 
-// WebSocket server for terminal
+// Get current workspace files for initial Sandpack load
+app.get("/api/files", async (_req, res) => {
+  try {
+    const workspaceDir = getWorkspaceDir();
+    const files = await readAllFiles(workspaceDir);
+    res.json(files);
+  } catch (err) {
+    console.error("[api] Error reading files:", err);
+    res.json({});
+  }
+});
+
+// WebSocket server for terminal + file events
 const wss = new WebSocketServer({ noServer: true });
 
 // Track alive state for heartbeat
 const aliveClients = new WeakSet<WebSocket>();
+
+// Broadcast file changes to all connected WebSocket clients
+function broadcastFiles(files: Record<string, string>): void {
+  const msg = JSON.stringify({ type: "files", files });
+  for (const client of wss.clients) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(msg);
+    }
+  }
+}
+
+function broadcastFileDeleted(filePath: string): void {
+  const msg = JSON.stringify({ type: "fileDeleted", path: filePath });
+  for (const client of wss.clients) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(msg);
+    }
+  }
+}
+
+// Start/stop file watcher based on active connections
+function manageFileWatcher(): void {
+  const hasClients = wss.clients.size > 0;
+  if (hasClients) {
+    startWatching({
+      workspaceDir: getWorkspaceDir(),
+      onChange: broadcastFiles,
+      onDelete: broadcastFileDeleted,
+    });
+  } else {
+    stopWatching();
+  }
+}
 
 wss.on("connection", (ws) => {
   aliveClients.add(ws);
@@ -35,10 +87,17 @@ wss.on("connection", (ws) => {
     aliveClients.add(ws);
   });
 
+  ws.on("close", () => {
+    // Check if we should stop the file watcher after a tick
+    // (let the ws library update clients set first)
+    setTimeout(manageFileWatcher, 100);
+  });
+
   handleTerminalConnection(ws);
+  manageFileWatcher();
 });
 
-// Heartbeat: ping every 30s, terminate if no pong within 10s
+// Heartbeat: ping every 30s, terminate if no pong
 const heartbeatInterval = setInterval(() => {
   for (const ws of wss.clients) {
     if (!aliveClients.has(ws)) {
@@ -71,6 +130,7 @@ httpServer.on("upgrade", (request, socket, head) => {
 // Graceful shutdown
 function shutdown() {
   console.log("\n[server] Shutting down...");
+  stopWatching();
   cleanupAllSessions();
   clearInterval(heartbeatInterval);
   wss.close();
@@ -78,7 +138,6 @@ function shutdown() {
     console.log("[server] Goodbye.");
     process.exit(0);
   });
-  // Force exit after 5s if graceful shutdown stalls
   setTimeout(() => process.exit(1), 5000);
 }
 
@@ -89,6 +148,7 @@ process.on("SIGTERM", shutdown);
 httpServer.listen(PORT, () => {
   console.log(`[server] HTCGF backend running on http://localhost:${PORT}`);
   console.log(`[server] WebSocket terminal at ws://localhost:${PORT}/terminal`);
+  console.log(`[server] Workspace: ${getWorkspaceDir()}`);
 }).on("error", (err: NodeJS.ErrnoException) => {
   if (err.code === "EADDRINUSE") {
     console.error(

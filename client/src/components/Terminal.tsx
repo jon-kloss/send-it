@@ -3,22 +3,33 @@ import { Terminal as XTerm } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";
 import { WebLinksAddon } from "@xterm/addon-web-links";
 import "@xterm/xterm/css/xterm.css";
+import type { SocketMessage } from "../hooks/useSocket";
 
-const WS_URL = "ws://localhost:3001/terminal";
+interface TerminalProps {
+  send: (msg: object) => void;
+  connected: boolean;
+  addMessageHandler: (handler: (msg: SocketMessage) => void) => () => void;
+}
 
-export default function Terminal() {
+export default function Terminal({
+  send,
+  connected,
+  addMessageHandler,
+}: TerminalProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const termRef = useRef<XTerm | null>(null);
   const fitAddonRef = useRef<FitAddon | null>(null);
-  const wsRef = useRef<WebSocket | null>(null);
+  const sentInitialResize = useRef(false);
 
+  // Initialize terminal
   useEffect(() => {
     if (!containerRef.current) return;
 
     const term = new XTerm({
       cursorBlink: true,
       fontSize: 14,
-      fontFamily: '"Cascadia Code", "Fira Code", "JetBrains Mono", Menlo, monospace',
+      fontFamily:
+        '"Cascadia Code", "Fira Code", "JetBrains Mono", Menlo, monospace',
       scrollback: 5000,
       theme: {
         background: "#1e1e1e",
@@ -55,71 +66,17 @@ export default function Terminal() {
     termRef.current = term;
     fitAddonRef.current = fitAddon;
 
-    // Connect WebSocket
-    const ws = new WebSocket(WS_URL);
-    wsRef.current = ws;
-
-    ws.onopen = () => {
-      // Send initial size
-      ws.send(
-        JSON.stringify({
-          type: "resize",
-          cols: term.cols,
-          rows: term.rows,
-        })
-      );
-    };
-
-    ws.onmessage = (event) => {
-      try {
-        const msg = JSON.parse(event.data);
-        switch (msg.type) {
-          case "output":
-            if (msg.data) {
-              term.write(msg.data);
-            }
-            break;
-          case "error":
-            term.writeln(`\r\n\x1b[31m${msg.message}\x1b[0m`);
-            break;
-        }
-      } catch {
-        // Ignore malformed messages
-      }
-    };
-
-    ws.onclose = () => {
-      term.writeln("\r\n\x1b[33mConnection lost. Refresh to reconnect.\x1b[0m");
-    };
-
-    ws.onerror = () => {
-      term.writeln(
-        "\r\n\x1b[31mFailed to connect to server. Is the backend running?\x1b[0m"
-      );
-    };
-
-    // Send terminal input to server
-    term.onData((data) => {
-      if (ws.readyState === WebSocket.OPEN) {
-        ws.send(JSON.stringify({ type: "input", data }));
-      }
-    });
-
     // Handle resize
     const resizeObserver = new ResizeObserver(() => {
       requestAnimationFrame(() => {
         if (fitAddonRef.current && termRef.current) {
           try {
             fitAddonRef.current.fit();
-            if (wsRef.current?.readyState === WebSocket.OPEN) {
-              wsRef.current.send(
-                JSON.stringify({
-                  type: "resize",
-                  cols: termRef.current.cols,
-                  rows: termRef.current.rows,
-                })
-              );
-            }
+            send({
+              type: "resize",
+              cols: termRef.current.cols,
+              rows: termRef.current.rows,
+            });
           } catch {
             // Ignore fit errors during transitions
           }
@@ -130,13 +87,66 @@ export default function Terminal() {
 
     return () => {
       resizeObserver.disconnect();
-      ws.close();
       term.dispose();
       termRef.current = null;
       fitAddonRef.current = null;
-      wsRef.current = null;
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Send terminal input
+  useEffect(() => {
+    const term = termRef.current;
+    if (!term) return;
+
+    const disposable = term.onData((data) => {
+      send({ type: "input", data });
+    });
+
+    return () => disposable.dispose();
+  }, [send]);
+
+  // Handle incoming messages (output, error)
+  useEffect(() => {
+    return addMessageHandler((msg: SocketMessage) => {
+      const term = termRef.current;
+      if (!term) return;
+
+      switch (msg.type) {
+        case "output":
+          if (msg.data) {
+            term.write(msg.data);
+          }
+          break;
+        case "error":
+          term.writeln(`\r\n\x1b[31m${msg.message}\x1b[0m`);
+          break;
+      }
+    });
+  }, [addMessageHandler]);
+
+  // Send initial resize when connected
+  useEffect(() => {
+    if (connected && termRef.current && !sentInitialResize.current) {
+      sentInitialResize.current = true;
+      send({
+        type: "resize",
+        cols: termRef.current.cols,
+        rows: termRef.current.rows,
+      });
+    }
+  }, [connected, send]);
+
+  // Show connection status
+  useEffect(() => {
+    const term = termRef.current;
+    if (!term) return;
+
+    if (!connected) {
+      term.writeln(
+        "\r\n\x1b[33mConnection lost. Refresh to reconnect.\x1b[0m"
+      );
+    }
+  }, [connected]);
 
   return (
     <div

@@ -33,7 +33,7 @@ function findShell(): string {
   return "/bin/sh";
 }
 
-function getWorkspaceDir(): string {
+export function getWorkspaceDir(): string {
   const dir = path.join(os.homedir(), "htcgf-workspace");
   if (!existsSync(dir)) {
     mkdirSync(dir, { recursive: true });
