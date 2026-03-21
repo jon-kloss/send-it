@@ -7,6 +7,9 @@ interface TutorialDrawerProps {
   projectType: ProjectId;
   onComplete: () => void;
   isLastStep: boolean;
+  canToggleBeforeAfter?: boolean;
+  showingBefore?: boolean;
+  onToggleBeforeAfter?: () => void;
 }
 
 export default function TutorialDrawer({
@@ -14,6 +17,9 @@ export default function TutorialDrawer({
   projectType,
   onComplete,
   isLastStep,
+  canToggleBeforeAfter = false,
+  showingBefore = false,
+  onToggleBeforeAfter,
 }: TutorialDrawerProps) {
   const [expanded, setExpanded] = useState(true);
 
@@ -73,6 +79,18 @@ export default function TutorialDrawer({
           </div>
 
           <div style={styles.footer}>
+            {canToggleBeforeAfter && onToggleBeforeAfter && (
+              <button
+                onClick={onToggleBeforeAfter}
+                style={{
+                  ...styles.beforeAfterBtn,
+                  backgroundColor: showingBefore ? "#0e639c" : "#3e3e42",
+                }}
+              >
+                {showingBefore ? "Showing: Before" : "Compare: Before/After"}
+              </button>
+            )}
+            <div style={{ flex: 1 }} />
             <button onClick={onComplete} style={styles.doneButton}>
               {isLastStep ? "🎉 Finish Tutorial" : "✅ Mark as Done"}
             </button>
@@ -163,6 +181,17 @@ const styles: Record<string, React.CSSProperties> = {
     borderTop: "1px solid #3e3e42",
     display: "flex",
     justifyContent: "flex-end",
+  },
+  beforeAfterBtn: {
+    padding: "6px 12px",
+    color: "#d4d4d4",
+    border: "none",
+    borderRadius: "4px",
+    cursor: "pointer",
+    fontSize: "12px",
+    fontWeight: 500,
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    transition: "background-color 0.15s ease",
   },
   doneButton: {
     padding: "6px 16px",
