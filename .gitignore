@@ -2,3 +2,22 @@
 # Dolt database files (added by bd init)
 .dolt/
 *.db
+
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Environment
+.env
+.env.local
+
+# Editor
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
