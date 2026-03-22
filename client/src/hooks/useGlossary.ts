@@ -66,7 +66,7 @@ export function useGlossary(
   const [discoveredTerms, setDiscoveredTerms] = useState<string[]>(loadDiscovered);
   const [toasts, setToasts] = useState<GlossaryToast[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [activePopup, setActivePopup] = useState<GlossaryPopup | null>(null);
+  const [popupQueue, setPopupQueue] = useState<GlossaryPopup[]>([]);
   const [popupsSeen, setPopupsSeen] = useState<string[]>(loadPopupsSeen);
   const toastIdRef = useRef(0);
   const terminalBufferRef = useRef("");
@@ -91,10 +91,10 @@ export function useGlossary(
       // Check if this term has a first-time popup
       const entry = GLOSSARY.find((e) => e.term === term);
       if (entry?.firstTimePopup && !popupsSeen.includes(term)) {
-        setActivePopup({
-          ...entry.firstTimePopup,
-          term,
-        });
+        setPopupQueue((prev) => [
+          ...prev,
+          { ...entry.firstTimePopup!, term },
+        ]);
         setPopupsSeen((prev) => [...prev, term]);
       } else {
         // Show toast (no toast if popup is showing)
@@ -109,8 +109,10 @@ export function useGlossary(
   );
 
   const dismissPopup = useCallback(() => {
-    setActivePopup(null);
+    setPopupQueue((prev) => prev.slice(1));
   }, []);
+
+  const activePopup = popupQueue.length > 0 ? popupQueue[0] : null;
 
   // Watch terminal output for glossary terms
   useEffect(() => {
@@ -170,6 +172,7 @@ export function useGlossary(
     openModal,
     closeModal,
     activePopup,
+    popupQueueLength: popupQueue.length,
     dismissPopup,
     resetGlossary,
   };

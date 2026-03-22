@@ -207,6 +207,7 @@ export default function App() {
       {glossary.activePopup && (
         <DiscoveryPopup
           popup={glossary.activePopup}
+          queueLength={glossary.popupQueueLength}
           onDismiss={glossary.dismissPopup}
         />
       )}

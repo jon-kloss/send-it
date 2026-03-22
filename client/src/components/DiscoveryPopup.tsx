@@ -1,21 +1,30 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import type { GlossaryPopup } from "../hooks/useGlossary";
 
 interface DiscoveryPopupProps {
   popup: GlossaryPopup;
+  queueLength: number;
   onDismiss: () => void;
 }
 
 export default function DiscoveryPopup({
   popup,
+  queueLength,
   onDismiss,
 }: DiscoveryPopupProps) {
   const [fading, setFading] = useState(false);
 
+  // Reset fade when popup changes (next in queue)
+  useEffect(() => {
+    setFading(false);
+  }, [popup.term]);
+
   const handleDismiss = useCallback(() => {
     setFading(true);
-    setTimeout(onDismiss, 400);
+    setTimeout(onDismiss, 300);
   }, [onDismiss]);
+
+  const remaining = queueLength - 1;
 
   return (
     <div
@@ -42,7 +51,7 @@ export default function DiscoveryPopup({
             📖 Added to your Glossary
           </span>
           <button onClick={handleDismiss} style={styles.button}>
-            Got it!
+            {remaining > 0 ? `Got it! (${remaining} more)` : "Got it!"}
           </button>
         </div>
       </div>
@@ -60,7 +69,7 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: "center",
     zIndex: 5000,
     padding: "20px",
-    transition: "opacity 0.4s ease",
+    transition: "opacity 0.3s ease",
   },
   popup: {
     maxWidth: "460px",
