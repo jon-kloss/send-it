@@ -33,29 +33,44 @@ The user enters their name, picks a project type (personal portfolio, recipe col
 
 - **Real terminal** — xterm.js connected to an actual shell via node-pty + WebSocket. Claude Code runs for real.
 - **Live preview** — Sandpack hot-reloads as Claude creates/edits files in `~/htcgf-workspace/`.
-- **12-step tutorial** — Beginner-friendly steps from "Say hello to Claude" through "You did it!" with project-specific prompts for all 3 project types.
-- **Auto-advancing steps** — Steps complete automatically when Claude finishes making changes (no manual "Mark as Done" needed).
+- **12-step tutorial** — Beginner-friendly steps that teach prompting, undo, error fixing, and Claude's memory. Project-specific prompts for all 3 project types.
+- **Auto-advancing steps** — Steps complete automatically when Claude finishes making changes.
+- **Smart suggestions** — When the user goes off-script, analyzes their files and suggests a contextual next step.
 - **Achievement system** — 7 achievements with confetti celebrations at milestone steps. Click the trophy badge to see earned/locked achievements.
-- **Glossary** — Auto-discovers terms like "Skill", "Self-Correction", "Permission Prompt" from terminal output and shows educational popups the first time. Searchable modal with 16 terms.
-- **Customizable name** — Entered on the welcome screen and interpolated into prompts for the portfolio project.
-- **Before/after comparisons** — Toggle to compare the preview before and after key styling steps.
+- **Glossary** — Auto-discovers terms like "Skill", "Self-Correction", "Error Message", "Permission Prompt" from terminal output. Shows educational popups the first time a term is encountered. Searchable modal with 21 terms.
+- **Customizable name** — Entered on the welcome screen, preserved across resets, and interpolated into prompts.
+- **Before/after comparisons** — Floating toggle on the preview pane to compare before and after key steps.
 - **Progress persistence** — Tutorial state, achievements, and glossary saved to localStorage.
-- **Reset** — Full reset button clears tutorial progress, kills the terminal session, and wipes workspace files.
+- **Full reset** — Clears tutorial progress, kills the terminal session, wipes workspace files, and preserves the user's name.
 
 ### Tutorial Steps
 
-1. Say hello to Claude
-2. Create your first page
-3. Make it look nice
-4. Add your first content
-5. Add more content
-6. Add a menu bar
-7. Make it do something
-8. Add a visual touch
-9. Make it work on phones
-10. Change something you don't like
-11. Add something special
-12. You did it!
+| Step | Title | What it teaches |
+|------|-------|-----------------|
+| 1 | Say hello to Claude | Starting Claude Code |
+| 2 | Create your first page | Basic prompting, permission prompts |
+| 3 | Make it look nice | Styling, Claude skills |
+| 4 | Try something wild | Make it ugly on purpose (neon colors) |
+| 5 | Undo! Go back! | The "undo" safety net |
+| 6 | Add your first content | Incremental building |
+| 7 | Add more content | Growing the site |
+| 8 | Add a menu bar | Navigation, multi-file editing |
+| 9 | Make it do something | Interactivity, extended thinking |
+| 10 | Break it on purpose | Intentionally cause a JS error |
+| 11 | Copy the error to Claude! | Paste errors to Claude for fixing |
+| 12 | Remember this? | Claude's conversational memory |
+
+### Achievements
+
+| Emoji | Title | Earned at |
+|-------|-------|-----------|
+| 👋 | First Contact | Step 1 — Starting Claude |
+| 🎨 | Creator | Step 2 — First website |
+| ✨ | Designer | Step 3 — Styling |
+| ⏪ | Time Traveler | Step 5 — Undo |
+| ⚡ | Programmer | Step 9 — Interactivity |
+| 🐛 | Bug Squasher | Step 11 — Fixing errors |
+| 🚀 | Shipped! | Step 12 — Finale |
 
 ## Architecture
 
@@ -72,7 +87,7 @@ The user enters their name, picks a project type (personal portfolio, recipe col
 │  │  (xterm.js)       │  │  (Sandpack)              │ │
 │  │                   │  │                          │ │
 │  │  Real Claude Code │  │  Auto-updating preview   │ │
-│  │  running here     │  │  of her website          │ │
+│  │  running here     │  │  of the website          │ │
 │  └──────────────────┘  └──────────────────────────┘ │
 │                                                     │
 │  ┌─ Tutorial Drawer ─────────────────────────────┐  │
@@ -120,7 +135,7 @@ client/src/
     AchievementsModal.tsx     — Modal showing all earned/locked achievements
     GlossaryModal.tsx         — Searchable glossary of discovered terms
     GlossaryToast.tsx         — Toast for newly discovered glossary terms
-    DiscoveryPopup.tsx        — First-time educational popup (skills, self-correction, etc.)
+    DiscoveryPopup.tsx        — First-time educational popup (skills, errors, etc.)
     CompletionScreen.tsx      — Final celebration screen with stats
   hooks/
     useSocket.ts              — Shared WebSocket connection
@@ -130,11 +145,12 @@ client/src/
     useClaudeBusy.ts          — Track when Claude is actively outputting
     useBeforeAfter.ts         — File snapshots for before/after comparisons
     useGlossary.ts            — Term discovery from terminal output
+    useSmartSuggestion.ts     — Contextual suggestions when user goes off-script
   tutorial/
     types.ts                  — TypeScript interfaces
     steps.ts                  — 12 tutorial steps with prompts per project type
     projects.ts               — 3 project type definitions
-    glossary.ts               — 16 glossary terms with detection patterns
+    glossary.ts               — 21 glossary terms with detection patterns
 
 server/src/
   index.ts                    — Express server, WebSocket, file API, reset endpoint
