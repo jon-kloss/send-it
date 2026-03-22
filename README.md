@@ -1,4 +1,4 @@
-# HTCGF — How To Claude Code: Girlfriend Edition
+# SEND IT — Speak English, No Degree: Interactive Tutorial
 
 An interactive tutorial that teaches someone with zero coding experience how to build a website using Claude Code. The app provides a split-screen experience with a real terminal on the left and a live preview on the right, so the user can watch their website take shape in real-time as they chat with Claude.
 

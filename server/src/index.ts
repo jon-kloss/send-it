@@ -173,7 +173,7 @@ process.on("SIGTERM", shutdown);
 
 // Start server
 httpServer.listen(PORT, () => {
-  console.log(`[server] HTCGF backend running on http://localhost:${PORT}`);
+  console.log(`[server] SEND IT backend running on http://localhost:${PORT}`);
   console.log(`[server] WebSocket terminal at ws://localhost:${PORT}/terminal`);
   console.log(`[server] Workspace: ${getWorkspaceDir()}`);
 }).on("error", (err: NodeJS.ErrnoException) => {

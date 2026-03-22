@@ -1,8 +1,8 @@
 {
-  "name": "htcgf",
+  "name": "send-it",
   "version": "1.0.0",
   "private": true,
-  "description": "How To Claude Code: Girlfriend Edition - Interactive Claude Code tutorial",
+  "description": "SEND IT — Speak English, No Degree: Interactive Tutorial for Claude Code",
   "workspaces": [
     "client",
     "server"

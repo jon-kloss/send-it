@@ -21,7 +21,8 @@ export default function ProjectPicker({ onSelect, existingName }: ProjectPickerP
     <div style={styles.overlay}>
       <div style={styles.container}>
         <div style={styles.header}>
-          <h1 style={styles.title}>Welcome!</h1>
+          <h1 style={styles.title}>SEND IT</h1>
+          <p style={styles.tagline}>Speak English, No Degree: Interactive Tutorial</p>
           <p style={styles.subtitle}>
             You're about to build a real website using AI. No coding experience
             needed — just pick a project and start talking to Claude!
@@ -100,6 +101,15 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: "36px",
     fontWeight: 700,
     color: "#ffffff",
+    margin: "0 0 12px",
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  },
+  tagline: {
+    fontSize: "13px",
+    color: "#569cd6",
+    letterSpacing: "1px",
+    textTransform: "uppercase" as const,
+    fontWeight: 600,
     margin: "0 0 12px",
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   },
