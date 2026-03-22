@@ -174,6 +174,45 @@ export const GLOSSARY: GlossaryEntry[] = [
       "Tokens are how Claude measures the size of a conversation. Think of them like words — but not exactly. A token is roughly 3/4 of a word. When you send Claude a message and it responds, both your message and its response use tokens. Claude has a limit on how many tokens it can handle at once, kind of like how many pages it can read and write in one sitting.",
     detectPatterns: [/token/i, /context.*window/i, /token.*usage/i],
   },
+  {
+    term: "Undo",
+    definition:
+      "Made a mistake or don't like what Claude did? Just say 'undo that' or 'go back to how it was before' and Claude will revert the change. You can never mess things up permanently — there's always a way back!",
+    detectPatterns: [/undo/i, /revert/i, /roll\s*back/i, /restore/i],
+  },
+  {
+    term: "Extended Thinking",
+    definition:
+      "Sometimes you'll see Claude pause and think for a moment before responding. This means it's working through something complex — like planning how to build a tricky feature. It's not frozen! The longer it thinks, the more carefully it's planning. Just wait and it'll come back with a great result.",
+    detectPatterns: [/thinking/i, /Thinking\.\.\./],
+    firstTimePopup: {
+      emoji: "🧠",
+      title: "Claude is thinking!",
+      paragraphs: [
+        "You might notice Claude pausing for a moment. Don't worry — it's not stuck! It's thinking through how to build what you asked for.",
+        "The more complex your request, the longer Claude might think. This is actually a good thing — it means Claude is carefully planning its approach instead of rushing.",
+        "Just wait a moment and Claude will come back with its answer!",
+      ],
+    },
+  },
+  {
+    term: "Slash Commands",
+    definition:
+      "Special shortcuts you can type in Claude Code that start with a slash (/). For example: /help shows all available commands, /clear clears the screen, and /compact saves memory when conversations get long. Think of them like cheat codes!",
+    detectPatterns: [/\/help/i, /\/clear/i, /\/compact/i, /slash.*command/i],
+  },
+  {
+    term: "Multi-File Editing",
+    definition:
+      "Claude can work on multiple files at the same time and keep them all in sync. When it changes the look of your site, it might update both the layout and the styling together — making sure everything stays consistent.",
+    detectPatterns: [/Updated \d+ files/i, /Edit\(.*\).*Edit\(/i],
+  },
+  {
+    term: "Context",
+    definition:
+      "Claude remembers everything you've talked about during your conversation. If you mentioned a blue color scheme 10 messages ago, you can say 'remember that blue from earlier? Use that again' and Claude will know exactly what you mean. The more you chat, the better Claude understands what you want.",
+    detectPatterns: [/context/i, /conversation.*history/i],
+  },
 ];
 
 // Pre-built terms that are always in the glossary from the start

@@ -63,6 +63,7 @@ export const STEPS: TutorialStep[] = [
     tips: [
       "Watch the right side — your website will appear there as Claude builds it!",
       "You don't need to understand anything Claude writes. Just focus on what appears on the right!",
+      "Claude might ask for your permission before creating files — just press Enter or type 1 to say yes!",
     ],
     achievement: { id: "creator", title: "Creator", emoji: "🎨" },
     completionCheck: {
@@ -97,6 +98,7 @@ export const STEPS: TutorialStep[] = [
     tips: [
       "Be specific about what you like — 'I want blue and white' works better than 'make it nice'.",
       "If you don't like what Claude made, just say so! Try: 'I'd prefer different colors' or 'Make the text bigger'.",
+      "You can always say 'undo that' to go back to how it was before — you can never mess things up permanently!",
       "Notice how Claude might activate a special 'skill' — that's like a superpower that makes it even better at design!",
     ],
     achievement: { id: "designer", title: "Designer", emoji: "✨" },
@@ -133,6 +135,7 @@ export const STEPS: TutorialStep[] = [
     tips: [
       "We're building one piece at a time — that's how the pros do it!",
       "You can always tell Claude to change what it made: 'Make the description longer' or 'Use a different name'.",
+      "Curious about something? Ask Claude 'why did you do it that way?' and it'll explain in simple terms!",
     ],
     completionCheck: {
       anyFileChange: true,
@@ -166,6 +169,7 @@ export const STEPS: TutorialStep[] = [
     tips: [
       "See how your site is growing? You're building it piece by piece!",
       "Want different content? Just tell Claude what you'd prefer instead.",
+      "Claude remembers everything you've built so far — you can reference earlier steps like 'match the style from before'.",
     ],
     hasBeforeAfter: true,
     completionCheck: {
@@ -234,6 +238,8 @@ export const STEPS: TutorialStep[] = [
     tips: [
       "This is where it gets fun — your website will actually respond to clicks!",
       "Just describe what you want to happen and Claude figures out the rest.",
+      "If Claude pauses to think for a moment, that's normal! It's planning how to make things interactive — the more complex the feature, the longer it thinks.",
+      "When Claude asks permission, you can say no! It'll try a different approach. You're always in control.",
     ],
     achievement: {
       id: "programmer",
@@ -272,6 +278,7 @@ export const STEPS: TutorialStep[] = [
     tips: [
       "Little visual touches make your site feel alive and professional!",
       "You can always say 'Make it more subtle' or 'Make it bolder' to adjust.",
+      "Notice how Claude might update multiple files at once — it keeps everything in sync automatically!",
     ],
     completionCheck: { anyFileChange: true },
   },
@@ -343,6 +350,7 @@ export const STEPS: TutorialStep[] = [
       "This is the magic — just describe what you want changed and Claude handles it!",
       "Try being casual: 'I don't love the font, can you try something more playful?'",
       "If Claude changes something you liked, just say: 'Actually, change that back'.",
+      "If something looks broken or weird, just tell Claude: 'Something looks wrong, can you fix it?' — it'll figure out what's off!",
     ],
     completionCheck: { anyFileChange: true },
   },
@@ -374,6 +382,7 @@ export const STEPS: TutorialStep[] = [
     tips: [
       "This is YOUR website — add whatever sounds fun to you!",
       "You're not limited to these ideas. Try asking Claude for anything you can imagine.",
+      "Pro tip: type /help in Claude to see all the special commands you can use!",
     ],
     achievement: {
       id: "innovator",
@@ -411,6 +420,7 @@ export const STEPS: TutorialStep[] = [
       "Everything Claude built is saved on this computer — it's yours to keep!",
       "You can keep chatting with Claude to add even more features anytime.",
       "Try building something completely different next time — the sky's the limit!",
+      "If the conversation gets really long, type /compact to help Claude stay focused.",
     ],
     achievement: { id: "shipped", title: "Shipped!", emoji: "🚀" },
     hasBeforeAfter: true,
