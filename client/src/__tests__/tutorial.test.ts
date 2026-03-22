@@ -37,7 +37,7 @@ describe("Tutorial data integrity", () => {
   });
 
   it("milestone steps have achievements", () => {
-    const milestoneSteps = [1, 2, 3, 7, 9, 11, 12];
+    const milestoneSteps = [1, 2, 3, 5, 9, 11, 12];
     milestoneSteps.forEach((stepId) => {
       const step = STEPS.find((s) => s.id === stepId);
       expect(step?.achievement).toBeDefined();

@@ -97,8 +97,6 @@ export const STEPS: TutorialStep[] = [
     },
     tips: [
       "Be specific about what you like — 'I want blue and white' works better than 'make it nice'.",
-      "If you don't like what Claude made, just say so! Try: 'I'd prefer different colors' or 'Make the text bigger'.",
-      "You can always say 'undo that' to go back to how it was before — you can never mess things up permanently!",
       "Notice how Claude might activate a special 'skill' — that's like a superpower that makes it even better at design!",
     ],
     achievement: { id: "designer", title: "Designer", emoji: "✨" },
@@ -109,9 +107,79 @@ export const STEPS: TutorialStep[] = [
   },
   {
     id: 4,
+    title: "Try something wild",
+    description:
+      "Your site looks great — but let's have some fun! Ask Claude to change the colors to something totally crazy. Don't worry, we're going to undo this in the next step!",
+    prompts: {
+      portfolio: [
+        {
+          text: "Change all the colors on my website to neon green and hot pink. Make everything super bright and flashy. Go crazy with it!",
+          description: "Claude will make it hilariously ugly",
+        },
+      ],
+      recipe: [
+        {
+          text: "Change all the colors on my recipe site to neon green and hot pink. Make everything super bright and flashy. Go crazy with it!",
+          description: "Claude will make it hilariously ugly",
+        },
+      ],
+      todo: [
+        {
+          text: "Change all the colors on my to-do app to neon green and hot pink. Make everything super bright and flashy. Go crazy with it!",
+          description: "Claude will make it hilariously ugly",
+        },
+      ],
+    },
+    tips: [
+      "Yes, we're making it ugly on purpose! Trust the process.",
+      "Look at the preview — pretty wild, right? Don't worry, the next step will fix everything!",
+    ],
+    hasBeforeAfter: true,
+    completionCheck: {
+      anyFileChange: true,
+    },
+  },
+  {
+    id: 5,
+    title: "Undo! Go back!",
+    description:
+      "Yikes, that's ugly! Here's one of the most powerful things about Claude — you can tell it to undo what it just did. Try it now!",
+    prompts: {
+      portfolio: [
+        {
+          text: "Undo that! Go back to the nice blue and white colors from before.",
+          description: "Claude will revert to the good design",
+        },
+      ],
+      recipe: [
+        {
+          text: "Undo that! Go back to the warm cozy colors from before.",
+          description: "Claude will revert to the good design",
+        },
+      ],
+      todo: [
+        {
+          text: "Undo that! Go back to the clean minimal look from before.",
+          description: "Claude will revert to the good design",
+        },
+      ],
+    },
+    tips: [
+      "See? You can never mess things up permanently! Just tell Claude to undo and it goes right back.",
+      "This works anytime — if Claude ever changes something you liked, just say 'undo that' or 'go back to how it was'.",
+      "This is your safety net for the rest of the tutorial. Experiment freely!",
+    ],
+    achievement: { id: "time-traveler", title: "Time Traveler", emoji: "⏪" },
+    hasBeforeAfter: true,
+    completionCheck: {
+      anyFileChange: true,
+    },
+  },
+  {
+    id: 6,
     title: "Add your first content",
     description:
-      "Now let's add one real piece of content. Just one thing for now — we'll add more later!",
+      "Now that you know you can always undo, let's get back to building! Add one real piece of content to your site.",
     prompts: {
       portfolio: [
         {
@@ -142,7 +210,7 @@ export const STEPS: TutorialStep[] = [
     },
   },
   {
-    id: 5,
+    id: 7,
     title: "Add more content",
     description:
       "Nice! Now let's add a few more things to fill out your site. This is where it starts to feel real!",
@@ -177,7 +245,7 @@ export const STEPS: TutorialStep[] = [
     },
   },
   {
-    id: 6,
+    id: 8,
     title: "Add a menu bar",
     description:
       "Most websites have a menu at the top so people can jump to different sections. Let's add one!",
@@ -204,6 +272,7 @@ export const STEPS: TutorialStep[] = [
     tips: [
       "A menu bar helps visitors find their way around — like a table of contents!",
       "Don't like the style? Try: 'Make the menu darker' or 'Change the menu layout'.",
+      "Notice how Claude might update multiple files at once — it keeps everything in sync automatically!",
     ],
     hasBeforeAfter: true,
     completionCheck: {
@@ -211,7 +280,7 @@ export const STEPS: TutorialStep[] = [
     },
   },
   {
-    id: 7,
+    id: 9,
     title: "Make it do something",
     description:
       "Right now your website just sits there. Let's make one thing interactive — something that actually responds when you click it!",
@@ -238,7 +307,7 @@ export const STEPS: TutorialStep[] = [
     tips: [
       "This is where it gets fun — your website will actually respond to clicks!",
       "Just describe what you want to happen and Claude figures out the rest.",
-      "If Claude pauses to think for a moment, that's normal! It's planning how to make things interactive — the more complex the feature, the longer it thinks.",
+      "If Claude pauses to think for a moment, that's normal! It's planning how to make things interactive.",
       "When Claude asks permission, you can say no! It'll try a different approach. You're always in control.",
     ],
     achievement: {
@@ -251,175 +320,103 @@ export const STEPS: TutorialStep[] = [
     },
   },
   {
-    id: 8,
-    title: "Add a visual touch",
-    description:
-      "Let's add one eye-catching detail that makes your site feel more polished and alive.",
-    prompts: {
-      portfolio: (name) => [
-        {
-          text: `Add a colorful gradient background behind ${name}'s name at the top and make it fade in smoothly when the page loads.`,
-          description: "Claude will add a visual touch",
-        },
-      ],
-      recipe: [
-        {
-          text: "Add a fun emoji next to each recipe name — like 🍪 for cookies, 🍝 for pasta, and 🥤 for smoothie.",
-          description: "Claude will add recipe emojis",
-        },
-      ],
-      todo: [
-        {
-          text: "Add a fun animation when I check off a task — like a satisfying strikethrough effect.",
-          description: "Claude will add a check-off animation",
-        },
-      ],
-    },
-    tips: [
-      "Little visual touches make your site feel alive and professional!",
-      "You can always say 'Make it more subtle' or 'Make it bolder' to adjust.",
-      "Notice how Claude might update multiple files at once — it keeps everything in sync automatically!",
-    ],
-    completionCheck: { anyFileChange: true },
-  },
-  {
-    id: 9,
-    title: "Make it work on phones",
-    description:
-      "Most people look at websites on their phones. Let's make sure yours looks great on a small screen too!",
-    prompts: {
-      portfolio: [
-        {
-          text: "Make my website look good on phones. Stack everything in a single column on small screens and make sure buttons are big enough to tap.",
-          description: "Claude will make it phone-friendly",
-        },
-      ],
-      recipe: [
-        {
-          text: "Make my recipe site look good on phones. Stack the recipe cards in one column on small screens and make the text easy to read.",
-          description: "Claude will make it phone-friendly",
-        },
-      ],
-      todo: [
-        {
-          text: "Make my to-do app work well on phones. Make sure the text box and buttons are easy to tap with a finger.",
-          description: "Claude will make it phone-friendly",
-        },
-      ],
-    },
-    tips: [
-      "Try making the preview panel narrower to see how your site looks on a smaller screen!",
-      "When a site works on any screen size, that's called 'responsive design' — and you just did it!",
-    ],
-    achievement: {
-      id: "responsive",
-      title: "Mobile Master",
-      emoji: "📱",
-    },
-    hasBeforeAfter: true,
-    completionCheck: {
-      anyFileChange: true,
-    },
-  },
-  {
     id: 10,
-    title: "Change something you don't like",
+    title: "Break it on purpose",
     description:
-      "Here's the real magic — you can just tell Claude to change anything. Try tweaking something! This is how people actually build websites: make it, look at it, adjust.",
+      "Here's a secret about building things: stuff breaks sometimes — and that's totally fine! Let's intentionally make something go a little wrong so you can see how easy it is to fix.",
     prompts: {
       portfolio: [
         {
-          text: "I want to try different colors — change it to purple and gold instead.",
-          description: "Try a whole new color scheme",
+          text: "Make the text on my website really tiny — like 5px font size — and change the background color to be the same color as the text so nothing is readable.",
+          description: "Claude will make it unreadable (on purpose!)",
         },
       ],
       recipe: [
         {
-          text: "Change the colors to dark green and cream — I want it to feel more earthy and natural.",
-          description: "Try a whole new color scheme",
+          text: "Make all the recipe cards overlap each other so they're stacked on top of one another and you can't read any of them. Also make the title disappear.",
+          description: "Claude will mess up the layout (on purpose!)",
         },
       ],
       todo: [
         {
-          text: "Show a counter at the bottom that says how many tasks I still have left to do.",
-          description: "Add a task counter",
+          text: "Make the add task button really huge — like 500 pixels tall — so it pushes everything else off the screen. Also hide the task list.",
+          description: "Claude will break the layout (on purpose!)",
         },
       ],
     },
     tips: [
-      "This is the magic — just describe what you want changed and Claude handles it!",
-      "Try being casual: 'I don't love the font, can you try something more playful?'",
-      "If Claude changes something you liked, just say: 'Actually, change that back'.",
-      "If something looks broken or weird, just tell Claude: 'Something looks wrong, can you fix it?' — it'll figure out what's off!",
+      "Yes, we're breaking it on purpose! Look at the preview — things look pretty messed up, right?",
+      "Don't worry at all — the next step is going to be magical!",
     ],
     completionCheck: { anyFileChange: true },
   },
   {
     id: 11,
-    title: "Add something special",
+    title: "Tell Claude to fix it!",
     description:
-      "Let's add one more feature that makes your site uniquely yours. Pick one of these ideas or come up with something completely different!",
+      "Your site looks broken — but here's the amazing part. You don't need to know what went wrong. Just tell Claude something looks off, and it'll figure out the problem and fix it!",
     prompts: {
       portfolio: [
         {
-          text: "Add a simple contact form where someone can type their name, email, and a message to me.",
-          description: "Add a way for people to reach you",
+          text: "Something looks wrong with my website — I can't read anything and it looks broken. Can you fix it and make it look good again?",
+          description: "Claude will diagnose and fix the problem",
         },
       ],
       recipe: [
         {
-          text: "Add a heart button on each recipe. When I click it, the heart should turn red to mark it as a favorite.",
-          description: "Add a favorites feature",
+          text: "My recipe site looks all messed up — the cards are overlapping and the title is gone. Can you fix it and make it look good again?",
+          description: "Claude will diagnose and fix the problem",
         },
       ],
       todo: [
         {
-          text: "Make it so clicking a task checks it off, and add a fun confetti celebration when all tasks are done!",
-          description: "Add check-off and celebration",
+          text: "My to-do app looks broken — the button is way too big and I can't see the task list. Can you fix it and make it look good again?",
+          description: "Claude will diagnose and fix the problem",
         },
       ],
     },
     tips: [
-      "This is YOUR website — add whatever sounds fun to you!",
-      "You're not limited to these ideas. Try asking Claude for anything you can imagine.",
-      "Pro tip: type /help in Claude to see all the special commands you can use!",
+      "See? You don't need to know what's wrong — just describe what you see and Claude figures it out!",
+      "This is how real developers work too. When something breaks, you describe the problem and work through it.",
+      "Remember: you can always say 'something looks wrong, can you fix it?' anytime during the tutorial!",
     ],
     achievement: {
-      id: "innovator",
-      title: "Innovator",
-      emoji: "💡",
+      id: "debugger",
+      title: "Bug Squasher",
+      emoji: "🐛",
     },
     completionCheck: { anyFileChange: true },
   },
   {
     id: 12,
-    title: "You did it!",
+    title: "Remember this?",
     description:
-      "Congratulations — you just built a real website by having a conversation with AI! You didn't write a single line of code yourself. You just described what you wanted, and Claude built it. The website you made is saved on this computer, and you could even put it on the internet for the whole world to see!",
+      "One last superpower — Claude remembers your entire conversation. You can reference anything from earlier and it knows exactly what you mean. Try it!",
     prompts: {
-      portfolio: [
+      portfolio: (name) => [
         {
-          text: "Can you tell me what you built for me? Give me a simple summary and tell me how I could share it online.",
-          description: "Get a summary of what was built",
+          text: `Remember the colors and style from when we first made the site look nice? Use those same colors, but this time add a footer at the bottom with ${name}'s name and the current year. Also add smooth scrolling when clicking menu links.`,
+          description: "Claude will recall your earlier design and add to it",
         },
       ],
       recipe: [
         {
-          text: "Can you tell me what you built for me? Give me a simple summary and tell me how I could share it online.",
-          description: "Get a summary of what was built",
+          text: "Remember the warm cozy style from when we first designed the site? Make sure it still looks like that, and add a 'back to top' button that appears when I scroll down. Also add a search bar at the top that filters recipes.",
+          description: "Claude will recall your earlier design and add to it",
         },
       ],
       todo: [
         {
-          text: "Can you tell me what you built for me? Give me a simple summary and tell me how I could share it online.",
-          description: "Get a summary of what was built",
+          text: "Remember the clean minimal style from earlier? Make sure it still looks like that, and add a counter at the bottom showing how many tasks are left. Also make it so clicking a task checks it off with a satisfying animation.",
+          description: "Claude will recall your earlier design and add to it",
         },
       ],
     },
     tips: [
+      "Claude remembered what you built earlier — it has the whole conversation in its memory!",
+      "You can always reference earlier things: 'go back to that blue from step 3' or 'use the same style as before'.",
       "Everything Claude built is saved on this computer — it's yours to keep!",
-      "You can keep chatting with Claude to add even more features anytime.",
-      "Try building something completely different next time — the sky's the limit!",
+      "Pro tip: type /help in Claude to see all the special commands you can use!",
       "If the conversation gets really long, type /compact to help Claude stay focused.",
     ],
     achievement: { id: "shipped", title: "Shipped!", emoji: "🚀" },
