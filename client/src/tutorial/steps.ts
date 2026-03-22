@@ -327,25 +327,25 @@ export const STEPS: TutorialStep[] = [
     prompts: {
       portfolio: [
         {
-          text: "Add a button that calls a function called showSecretMessage() when clicked — but don't create that function. I want to see what happens when something breaks.",
-          description: "This will cause an error on purpose!",
+          text: "Add a script tag at the very top of the page that tries to call a function called initializePortfolio() — but don't create that function. I want to see what an error looks like.",
+          description: "This will cause an error that shows up in the preview!",
         },
       ],
       recipe: [
         {
-          text: "Add a button that calls a function called loadMoreRecipes() when clicked — but don't create that function. I want to see what happens when something breaks.",
-          description: "This will cause an error on purpose!",
+          text: "Add a script tag at the very top of the page that tries to call a function called initializeRecipes() — but don't create that function. I want to see what an error looks like.",
+          description: "This will cause an error that shows up in the preview!",
         },
       ],
       todo: [
         {
-          text: "Add a button that calls a function called sortTasks() when clicked — but don't create that function. I want to see what happens when something breaks.",
-          description: "This will cause an error on purpose!",
+          text: "Add a script tag at the very top of the page that tries to call a function called initializeTasks() — but don't create that function. I want to see what an error looks like.",
+          description: "This will cause an error that shows up in the preview!",
         },
       ],
     },
     tips: [
-      "Yes, we're breaking it on purpose! Click the new button and look at the preview — you should see an error message.",
+      "Yes, we're breaking it on purpose! Look at the preview — you should see a red error message appear.",
       "Don't panic when you see the error! The next step will teach you exactly what to do.",
       "Errors happen all the time when building things — even to professional developers!",
     ],
@@ -355,23 +355,23 @@ export const STEPS: TutorialStep[] = [
     id: 11,
     title: "Copy the error to Claude!",
     description:
-      "See that error in the preview? Here's the most useful trick you'll learn today: just copy the error message and paste it to Claude. You don't need to understand what it means — Claude will read it and fix the problem!",
+      "See that red error in the preview? Here's the most useful trick you'll learn today: just copy the error message and paste it to Claude. You don't need to understand what it means — Claude will read it and fix the problem!",
     prompts: {
       portfolio: [
         {
-          text: "I'm getting this error when I click the button: \"showSecretMessage is not defined\". Can you fix it? Make it show a fun popup message when clicked.",
+          text: "I'm getting this error: \"initializePortfolio is not defined\". Can you fix it? Make it actually do something cool — like show a welcome animation when the page loads.",
           description: "Paste the error and tell Claude what you wanted instead",
         },
       ],
       recipe: [
         {
-          text: "I'm getting this error when I click the button: \"loadMoreRecipes is not defined\". Can you fix it? Make it actually load and show a new recipe when clicked.",
+          text: "I'm getting this error: \"initializeRecipes is not defined\". Can you fix it? Make it actually do something useful — like show how many recipes are on the page.",
           description: "Paste the error and tell Claude what you wanted instead",
         },
       ],
       todo: [
         {
-          text: "I'm getting this error when I click the button: \"sortTasks is not defined\". Can you fix it? Make it actually sort my tasks alphabetically when clicked.",
+          text: "I'm getting this error: \"initializeTasks is not defined\". Can you fix it? Make it actually do something useful — like show today's date at the top of the list.",
           description: "Paste the error and tell Claude what you wanted instead",
         },
       ],
