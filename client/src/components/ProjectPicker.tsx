@@ -24,8 +24,8 @@ export default function ProjectPicker({ onSelect, existingName }: ProjectPickerP
           <h1 style={styles.title}>SEND IT</h1>
           <p style={styles.tagline}>Speak English, No Degree: Interactive Tutorial</p>
           <p style={styles.subtitle}>
-            You're about to build a real website using AI. No coding experience
-            needed — just pick a project and start talking to Claude!
+            Learn how to use Claude Code by building something fun — no
+            experience needed. Just type what you want, and watch Claude do the rest!
           </p>
         </div>
 
