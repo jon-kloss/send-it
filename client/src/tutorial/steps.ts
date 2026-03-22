@@ -323,62 +323,63 @@ export const STEPS: TutorialStep[] = [
     id: 10,
     title: "Break it on purpose",
     description:
-      "Here's a secret about building things: stuff breaks sometimes — and that's totally fine! Let's intentionally make something go a little wrong so you can see how easy it is to fix.",
+      "Here's a secret about building things: stuff breaks sometimes — and that's totally fine! Let's intentionally cause an error so you can learn the most important skill: telling Claude to fix it.",
     prompts: {
       portfolio: [
         {
-          text: "Make the text on my website really tiny — like 5px font size — and change the background color to be the same color as the text so nothing is readable.",
-          description: "Claude will make it unreadable (on purpose!)",
+          text: "Add a button that calls a function called showSecretMessage() when clicked — but don't create that function. I want to see what happens when something breaks.",
+          description: "This will cause an error on purpose!",
         },
       ],
       recipe: [
         {
-          text: "Make all the recipe cards overlap each other so they're stacked on top of one another and you can't read any of them. Also make the title disappear.",
-          description: "Claude will mess up the layout (on purpose!)",
+          text: "Add a button that calls a function called loadMoreRecipes() when clicked — but don't create that function. I want to see what happens when something breaks.",
+          description: "This will cause an error on purpose!",
         },
       ],
       todo: [
         {
-          text: "Make the add task button really huge — like 500 pixels tall — so it pushes everything else off the screen. Also hide the task list.",
-          description: "Claude will break the layout (on purpose!)",
+          text: "Add a button that calls a function called sortTasks() when clicked — but don't create that function. I want to see what happens when something breaks.",
+          description: "This will cause an error on purpose!",
         },
       ],
     },
     tips: [
-      "Yes, we're breaking it on purpose! Look at the preview — things look pretty messed up, right?",
-      "Don't worry at all — the next step is going to be magical!",
+      "Yes, we're breaking it on purpose! Click the new button and look at the preview — you should see an error message.",
+      "Don't panic when you see the error! The next step will teach you exactly what to do.",
+      "Errors happen all the time when building things — even to professional developers!",
     ],
     completionCheck: { anyFileChange: true },
   },
   {
     id: 11,
-    title: "Tell Claude to fix it!",
+    title: "Copy the error to Claude!",
     description:
-      "Your site looks broken — but here's the amazing part. You don't need to know what went wrong. Just tell Claude something looks off, and it'll figure out the problem and fix it!",
+      "See that error in the preview? Here's the most useful trick you'll learn today: just copy the error message and paste it to Claude. You don't need to understand what it means — Claude will read it and fix the problem!",
     prompts: {
       portfolio: [
         {
-          text: "Something looks wrong with my website — I can't read anything and it looks broken. Can you fix it and make it look good again?",
-          description: "Claude will diagnose and fix the problem",
+          text: "I'm getting this error when I click the button: \"showSecretMessage is not defined\". Can you fix it? Make it show a fun popup message when clicked.",
+          description: "Paste the error and tell Claude what you wanted instead",
         },
       ],
       recipe: [
         {
-          text: "My recipe site looks all messed up — the cards are overlapping and the title is gone. Can you fix it and make it look good again?",
-          description: "Claude will diagnose and fix the problem",
+          text: "I'm getting this error when I click the button: \"loadMoreRecipes is not defined\". Can you fix it? Make it actually load and show a new recipe when clicked.",
+          description: "Paste the error and tell Claude what you wanted instead",
         },
       ],
       todo: [
         {
-          text: "My to-do app looks broken — the button is way too big and I can't see the task list. Can you fix it and make it look good again?",
-          description: "Claude will diagnose and fix the problem",
+          text: "I'm getting this error when I click the button: \"sortTasks is not defined\". Can you fix it? Make it actually sort my tasks alphabetically when clicked.",
+          description: "Paste the error and tell Claude what you wanted instead",
         },
       ],
     },
     tips: [
-      "See? You don't need to know what's wrong — just describe what you see and Claude figures it out!",
-      "This is how real developers work too. When something breaks, you describe the problem and work through it.",
-      "Remember: you can always say 'something looks wrong, can you fix it?' anytime during the tutorial!",
+      "This is probably the most useful thing you'll learn today — whenever you see an error, just copy it and send it to Claude!",
+      "You don't need to understand the error. Claude reads it, figures out what went wrong, and fixes it.",
+      "This works with any error, anytime. Just copy, paste, and ask Claude to fix it!",
     ],
     achievement: {
       id: "debugger",

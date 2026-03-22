@@ -202,6 +202,21 @@ export const GLOSSARY: GlossaryEntry[] = [
     detectPatterns: [/\/help/i, /\/clear/i, /\/compact/i, /slash.*command/i],
   },
   {
+    term: "Error Message",
+    definition:
+      "A message that appears when something goes wrong on your website. It usually shows red text describing the problem. You don't need to understand it — just copy the message and paste it to Claude! Claude can read error messages and figure out exactly what needs to be fixed.",
+    detectPatterns: [/is not defined/i, /is not a function/i, /error/i, /unexpected token/i],
+    firstTimePopup: {
+      emoji: "🚨",
+      title: "You got an error!",
+      paragraphs: [
+        "Don't worry! Errors are completely normal — they happen all the time, even to experienced developers.",
+        "The error message might look scary, but it's actually trying to help. It's telling you (and Claude) exactly what went wrong.",
+        "Here's the trick: just copy the error message and paste it to Claude. Claude can read it and fix the problem — you don't need to understand it yourself!",
+      ],
+    },
+  },
+  {
     term: "Multi-File Editing",
     definition:
       "Claude can work on multiple files at the same time and keep them all in sync. When it changes the look of your site, it might update both the layout and the styling together — making sure everything stays consistent.",

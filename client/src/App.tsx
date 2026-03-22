@@ -71,13 +71,13 @@ export default function App() {
       tutorial.unlockAchievement(currentStepData.achievement.id);
     }
 
-    // Show completion screen on last step
-    if (tutorial.currentStep === TOTAL_STEPS) {
-      setShowCompletion(true);
-    }
-
     tutorial.markStepComplete();
   }, [currentStepData, files, captureAfter, tutorial]);
+
+  const handleFinishTutorial = useCallback(() => {
+    handleStepComplete();
+    setShowCompletion(true);
+  }, [handleStepComplete]);
 
   // Auto-detect step completion based on terminal output and file changes
   useAutoComplete({
@@ -107,7 +107,7 @@ export default function App() {
 
   // Show project picker if no project selected
   if (!tutorial.projectType) {
-    return <ProjectPicker onSelect={(projectId, userName) => tutorial.setProjectType(projectId, userName)} />;
+    return <ProjectPicker existingName={tutorial.userName} onSelect={(projectId, userName) => tutorial.setProjectType(projectId, userName)} />;
   }
 
   return (
@@ -178,7 +178,7 @@ export default function App() {
           step={currentStepData}
           projectType={tutorial.projectType}
           userName={tutorial.userName}
-          onComplete={handleStepComplete}
+          onComplete={tutorial.currentStep === TOTAL_STEPS ? handleFinishTutorial : handleStepComplete}
           isLastStep={tutorial.currentStep === TOTAL_STEPS}
           smartSuggestion={usedOurPrompt ? null : smartSuggestion}
           onPromptCopied={() => setUsedOurPrompt(true)}

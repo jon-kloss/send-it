@@ -4,10 +4,11 @@ import type { ProjectId } from "../tutorial/types";
 
 interface ProjectPickerProps {
   onSelect: (projectId: ProjectId, userName: string) => void;
+  existingName?: string;
 }
 
-export default function ProjectPicker({ onSelect }: ProjectPickerProps) {
-  const [name, setName] = useState("");
+export default function ProjectPicker({ onSelect, existingName }: ProjectPickerProps) {
+  const [name, setName] = useState(existingName || "");
 
   const hasName = name.trim().length > 0;
 

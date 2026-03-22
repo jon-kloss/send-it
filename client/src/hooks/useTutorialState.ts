@@ -99,12 +99,10 @@ export function useTutorialState() {
   }, []);
 
   const reset = useCallback(() => {
-    setState(DEFAULT_STATE);
-    try {
-      localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // ignore
-    }
+    setState((prev) => ({
+      ...DEFAULT_STATE,
+      userName: prev.userName,
+    }));
   }, []);
 
   return {
