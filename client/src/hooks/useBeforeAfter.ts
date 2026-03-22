@@ -1,74 +1,73 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 
-interface BeforeAfterState {
-  beforeFiles: Record<string, string>;
-  stepId: number | null;
-}
-
 export function useBeforeAfter(
   currentStep: number,
   hasBeforeAfter: boolean,
   currentFiles: Record<string, string>
 ) {
-  const [state, setState] = useState<BeforeAfterState>({
-    beforeFiles: {},
-    stepId: null,
-  });
+  const [beforeFiles, setBeforeFiles] = useState<Record<string, string>>({});
   const [showingBefore, setShowingBefore] = useState(false);
-  // Track whether new file changes have happened since the snapshot was taken
-  const filesAtAdvanceRef = useRef<string>("");
+  const [hasSnapshot, setHasSnapshot] = useState(false);
+  const snapshotTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // When entering a before/after step, capture "before" snapshot
+  // When entering a before/after step, wait for files to settle then snapshot
   useEffect(() => {
-    if (hasBeforeAfter && state.stepId !== currentStep) {
-      setState({
-        beforeFiles: { ...currentFiles },
-        stepId: currentStep,
-      });
-      setShowingBefore(false);
-      filesAtAdvanceRef.current = "";
+    // Clear any pending snapshot timer
+    if (snapshotTimerRef.current) {
+      clearTimeout(snapshotTimerRef.current);
+      snapshotTimerRef.current = null;
     }
-  }, [currentStep, hasBeforeAfter]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // When step advances away from a before/after step, snapshot current files
-  // so we can detect when NEW changes happen and clear the toggle
-  useEffect(() => {
-    if (!hasBeforeAfter && state.stepId !== null) {
-      // We just left a before/after step — record what files look like now
-      filesAtAdvanceRef.current = hashFiles(currentFiles);
+    setShowingBefore(false);
+
+    if (hasBeforeAfter) {
+      // Delay snapshot by 3s to let files from the previous step settle
+      snapshotTimerRef.current = setTimeout(() => {
+        setBeforeFiles({ ...currentFiles });
+        setHasSnapshot(true);
+      }, 3000);
+    } else {
+      // Keep the snapshot around for non-before/after steps
+      // It'll be cleared when the user runs a new prompt (files change)
     }
+
+    return () => {
+      if (snapshotTimerRef.current) {
+        clearTimeout(snapshotTimerRef.current);
+      }
+    };
   }, [currentStep]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Clear the snapshot when new file changes happen on a non-before/after step
+  // Clear snapshot when files change on a non-before/after step
+  // (user ran a new prompt, so before/after is no longer relevant)
+  const prevFilesHashRef = useRef("");
   useEffect(() => {
-    if (!hasBeforeAfter && state.stepId !== null && filesAtAdvanceRef.current) {
-      const currentHash = hashFiles(currentFiles);
-      if (currentHash !== filesAtAdvanceRef.current) {
-        // New changes happened — clear the before/after
-        setState({ beforeFiles: {}, stepId: null });
+    if (!hasBeforeAfter && hasSnapshot) {
+      const hash = hashFiles(currentFiles);
+      if (prevFilesHashRef.current && hash !== prevFilesHashRef.current) {
+        setHasSnapshot(false);
+        setBeforeFiles({});
         setShowingBefore(false);
-        filesAtAdvanceRef.current = "";
       }
+      prevFilesHashRef.current = hash;
     }
-  }, [currentFiles, hasBeforeAfter, state.stepId]);
+  }, [currentFiles, hasBeforeAfter, hasSnapshot]);
 
-  const captureAfter = useCallback(
-    (_files: Record<string, string>) => {
-      // no-op now — we just keep the before snapshot and compare against live files
-    },
-    []
-  );
+  // Reset prevFilesHash when step changes
+  useEffect(() => {
+    prevFilesHashRef.current = hashFiles(currentFiles);
+  }, [currentStep]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggleBeforeAfter = useCallback(() => {
     setShowingBefore((prev) => !prev);
   }, []);
 
-  // Files to display in preview (override if showing "before")
-  const displayFiles =
-    showingBefore && state.stepId !== null ? state.beforeFiles : currentFiles;
+  const captureAfter = useCallback(() => {}, []);
 
-  // Show toggle as long as we have a snapshot (even after advancing steps)
-  const canToggle = state.stepId !== null;
+  const displayFiles =
+    showingBefore && hasSnapshot ? beforeFiles : currentFiles;
+
+  const canToggle = hasSnapshot && Object.keys(beforeFiles).length > 0;
 
   return {
     displayFiles,
