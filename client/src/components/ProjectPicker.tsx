@@ -21,7 +21,11 @@ export default function ProjectPicker({ onSelect, existingName }: ProjectPickerP
     <div style={styles.overlay}>
       <div style={styles.container}>
         <div style={styles.header}>
-          <h1 style={styles.title}>SEND IT</h1>
+          <div style={styles.logoRow}>
+            <span style={styles.logoSend}>SEND</span>
+            <span style={styles.logoIt}>IT</span>
+            <span style={styles.logoRocket}>🚀</span>
+          </div>
           <p style={styles.tagline}>Speak English, No Degree: Interactive Tutorial</p>
           <p style={styles.subtitle}>
             Learn how to use Claude Code by building something fun — no
@@ -97,12 +101,34 @@ const styles: Record<string, React.CSSProperties> = {
   header: {
     marginBottom: "24px",
   },
-  title: {
-    fontSize: "36px",
-    fontWeight: 700,
-    color: "#ffffff",
-    margin: "0 0 12px",
+  logoRow: {
+    display: "flex",
+    alignItems: "baseline",
+    justifyContent: "center",
+    gap: "8px",
+    marginBottom: "8px",
+  },
+  logoSend: {
+    fontSize: "52px",
+    fontWeight: 800,
+    color: "#d4d4d4",
+    letterSpacing: "-2px",
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  },
+  logoIt: {
+    fontSize: "52px",
+    fontWeight: 800,
+    background: "linear-gradient(135deg, #569cd6, #c586c0)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
+    letterSpacing: "-2px",
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  },
+  logoRocket: {
+    fontSize: "36px",
+    display: "inline-block",
+    animation: "none",
+    marginLeft: "2px",
   },
   tagline: {
     fontSize: "13px",
