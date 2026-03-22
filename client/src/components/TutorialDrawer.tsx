@@ -8,6 +8,7 @@ interface TutorialDrawerProps {
   userName: string;
   onComplete: () => void;
   isLastStep: boolean;
+  tutorialComplete?: boolean;
   smartSuggestion?: PromptExample | null;
   onPromptCopied?: () => void;
 }
@@ -18,6 +19,7 @@ export default function TutorialDrawer({
   userName,
   onComplete,
   isLastStep,
+  tutorialComplete = false,
   smartSuggestion,
   onPromptCopied,
 }: TutorialDrawerProps) {
@@ -56,31 +58,44 @@ export default function TutorialDrawer({
           <div style={styles.scrollArea}>
             <p style={styles.description}>{step.description}</p>
 
-            {prompts.length > 0 && (
-              <div style={styles.promptsSection}>
-                <h4 style={styles.sectionTitle}>
-                  {step.id === 1
-                    ? "Type this in the terminal:"
-                    : "Here's an idea, or try your own:"}
-                </h4>
-                {prompts.map((prompt, i) => (
-                  <PromptCard key={i} prompt={prompt} onCopy={onPromptCopied} />
-                ))}
-                {step.id !== 1 && (
-                  <p style={styles.ownIdea}>
-                    These are just suggestions — feel free to ask Claude for anything you want!
-                  </p>
+            {tutorialComplete ? (
+              <>
+                <div style={styles.completeCard}>
+                  🎉 Tutorial complete! You can keep chatting with Claude to build more, or click the button to see your stats!
+                </div>
+                <button onClick={onComplete} style={styles.finishButton}>
+                  🎉 Finish Tutorial
+                </button>
+              </>
+            ) : (
+              <>
+                {prompts.length > 0 && (
+                  <div style={styles.promptsSection}>
+                    <h4 style={styles.sectionTitle}>
+                      {step.id === 1
+                        ? "Type this in the terminal:"
+                        : "Here's an idea, or try your own:"}
+                    </h4>
+                    {prompts.map((prompt, i) => (
+                      <PromptCard key={i} prompt={prompt} onCopy={onPromptCopied} />
+                    ))}
+                    {step.id !== 1 && (
+                      <p style={styles.ownIdea}>
+                        These are just suggestions — feel free to ask Claude for anything you want!
+                      </p>
+                    )}
+                  </div>
                 )}
-              </div>
-            )}
 
-            {smartSuggestion && step.id > 1 && (
-              <div style={styles.smartSection}>
-                <h4 style={styles.smartTitle}>
-                  Based on your site, you could also try:
-                </h4>
-                <PromptCard prompt={smartSuggestion} />
-              </div>
+                {smartSuggestion && step.id > 1 && (
+                  <div style={styles.smartSection}>
+                    <h4 style={styles.smartTitle}>
+                      Based on your site, you could also try:
+                    </h4>
+                    <PromptCard prompt={smartSuggestion} />
+                  </div>
+                )}
+              </>
             )}
 
             {step.tips.length > 0 && (
@@ -185,6 +200,32 @@ const styles: Record<string, React.CSSProperties> = {
     textTransform: "uppercase" as const,
     letterSpacing: "0.5px",
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  },
+  finishButton: {
+    display: "block",
+    width: "100%",
+    padding: "10px",
+    backgroundColor: "#0e639c",
+    color: "#ffffff",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+    fontSize: "14px",
+    fontWeight: 600,
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    marginBottom: "12px",
+  },
+  completeCard: {
+    background: "#2d2d30",
+    border: "1px solid #3e3e42",
+    borderRadius: "8px",
+    padding: "14px 16px",
+    fontSize: "13px",
+    color: "#808080",
+    lineHeight: "1.6",
+    textAlign: "center" as const,
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    marginBottom: "12px",
   },
   ownIdea: {
     fontSize: "12px",

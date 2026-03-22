@@ -180,6 +180,7 @@ export default function App() {
           userName={tutorial.userName}
           onComplete={tutorial.currentStep === TOTAL_STEPS ? handleFinishTutorial : handleStepComplete}
           isLastStep={tutorial.currentStep === TOTAL_STEPS}
+          tutorialComplete={tutorial.completedSteps.includes(TOTAL_STEPS)}
           smartSuggestion={usedOurPrompt ? null : smartSuggestion}
           onPromptCopied={() => setUsedOurPrompt(true)}
         />
