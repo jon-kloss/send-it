@@ -1,6 +1,42 @@
+import { execSync } from "node:child_process";
 import express from "express";
 import cors from "cors";
 import { createServer } from "node:http";
+
+// Preflight checks
+function checkPrerequisites(): void {
+  // Check Node version
+  const [major] = process.versions.node.split(".").map(Number);
+  if (major < 20) {
+    console.error(
+      `[server] Node.js 20+ required (you have ${process.versions.node}). Please upgrade: https://nodejs.org`
+    );
+    process.exit(1);
+  }
+
+  // Check Claude Code is installed
+  try {
+    execSync("which claude || where claude", { stdio: "ignore" });
+  } catch {
+    console.error(
+      "[server] Claude Code is not installed or not in your PATH."
+    );
+    console.error(
+      "[server] Install it with: brew install claude-code"
+    );
+    console.error(
+      "[server]              or: npm install -g @anthropic-ai/claude-code"
+    );
+    console.error(
+      "[server] Then run 'claude' once to set up authentication."
+    );
+    process.exit(1);
+  }
+
+  console.log("[server] Prerequisites OK (Node %s, Claude Code found)", process.versions.node);
+}
+
+checkPrerequisites();
 import { WebSocketServer, WebSocket } from "ws";
 import {
   handleTerminalConnection,
