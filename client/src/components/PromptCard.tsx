@@ -3,15 +3,17 @@ import type { PromptExample } from "../tutorial/types";
 
 interface PromptCardProps {
   prompt: PromptExample;
+  onCopy?: () => void;
 }
 
-export default function PromptCard({ prompt }: PromptCardProps) {
+export default function PromptCard({ prompt, onCopy }: PromptCardProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(prompt.text);
       setCopied(true);
+      onCopy?.();
       setTimeout(() => setCopied(false), 2000);
     } catch {
       // Fallback for non-HTTPS
@@ -24,6 +26,7 @@ export default function PromptCard({ prompt }: PromptCardProps) {
       document.execCommand("copy");
       document.body.removeChild(textarea);
       setCopied(true);
+      onCopy?.();
       setTimeout(() => setCopied(false), 2000);
     }
   }, [prompt.text]);

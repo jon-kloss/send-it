@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Allotment } from "allotment";
 import "allotment/dist/style.css";
 import Terminal from "./components/Terminal";
@@ -33,9 +33,15 @@ export default function App() {
     useState<Achievement | null>(null);
   const [achievementsOpen, setAchievementsOpen] = useState(false);
   const [showCompletion, setShowCompletion] = useState(false);
+  const [usedOurPrompt, setUsedOurPrompt] = useState(false);
 
   const currentStepData = STEPS[tutorial.currentStep - 1];
   const smartSuggestion = useSmartSuggestion(files, tutorial.currentStep);
+
+  // Reset the "used our prompt" flag when step changes
+  useEffect(() => {
+    setUsedOurPrompt(false);
+  }, [tutorial.currentStep]);
 
   const {
     displayFiles,
@@ -174,7 +180,8 @@ export default function App() {
           userName={tutorial.userName}
           onComplete={handleStepComplete}
           isLastStep={tutorial.currentStep === TOTAL_STEPS}
-          smartSuggestion={smartSuggestion}
+          smartSuggestion={usedOurPrompt ? null : smartSuggestion}
+          onPromptCopied={() => setUsedOurPrompt(true)}
         />
       )}
 

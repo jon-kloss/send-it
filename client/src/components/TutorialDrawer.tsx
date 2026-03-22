@@ -9,6 +9,7 @@ interface TutorialDrawerProps {
   onComplete: () => void;
   isLastStep: boolean;
   smartSuggestion?: PromptExample | null;
+  onPromptCopied?: () => void;
 }
 
 export default function TutorialDrawer({
@@ -18,6 +19,7 @@ export default function TutorialDrawer({
   onComplete,
   isLastStep,
   smartSuggestion,
+  onPromptCopied,
 }: TutorialDrawerProps) {
   const [expanded, setExpanded] = useState(true);
 
@@ -62,7 +64,7 @@ export default function TutorialDrawer({
                     : "Here's an idea, or try your own:"}
                 </h4>
                 {prompts.map((prompt, i) => (
-                  <PromptCard key={i} prompt={prompt} />
+                  <PromptCard key={i} prompt={prompt} onCopy={onPromptCopied} />
                 ))}
                 {step.id !== 1 && (
                   <p style={styles.ownIdea}>
