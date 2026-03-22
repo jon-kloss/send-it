@@ -1,25 +1,23 @@
 import { useState, useEffect } from "react";
-import type { TutorialStep, ProjectId } from "../tutorial/types";
+import { getPrompts, type TutorialStep, type ProjectId, type PromptExample } from "../tutorial/types";
 import PromptCard from "./PromptCard";
 
 interface TutorialDrawerProps {
   step: TutorialStep;
   projectType: ProjectId;
+  userName: string;
   onComplete: () => void;
   isLastStep: boolean;
-  canToggleBeforeAfter?: boolean;
-  showingBefore?: boolean;
-  onToggleBeforeAfter?: () => void;
+  smartSuggestion?: PromptExample | null;
 }
 
 export default function TutorialDrawer({
   step,
   projectType,
+  userName,
   onComplete,
   isLastStep,
-  canToggleBeforeAfter = false,
-  showingBefore = false,
-  onToggleBeforeAfter,
+  smartSuggestion,
 }: TutorialDrawerProps) {
   const [expanded, setExpanded] = useState(true);
 
@@ -28,7 +26,7 @@ export default function TutorialDrawer({
     setExpanded(true);
   }, [step.id]);
 
-  const prompts = step.prompts[projectType] || [];
+  const prompts = getPrompts(step, projectType, userName);
 
   return (
     <div
@@ -59,11 +57,27 @@ export default function TutorialDrawer({
             {prompts.length > 0 && (
               <div style={styles.promptsSection}>
                 <h4 style={styles.sectionTitle}>
-                  Try this in the terminal:
+                  {step.id === 1
+                    ? "Type this in the terminal:"
+                    : "Here's an idea, or try your own:"}
                 </h4>
                 {prompts.map((prompt, i) => (
                   <PromptCard key={i} prompt={prompt} />
                 ))}
+                {step.id !== 1 && (
+                  <p style={styles.ownIdea}>
+                    These are just suggestions — feel free to ask Claude for anything you want!
+                  </p>
+                )}
+              </div>
+            )}
+
+            {smartSuggestion && step.id > 1 && (
+              <div style={styles.smartSection}>
+                <h4 style={styles.smartTitle}>
+                  Based on your site, you could also try:
+                </h4>
+                <PromptCard prompt={smartSuggestion} />
               </div>
             )}
 
@@ -79,20 +93,9 @@ export default function TutorialDrawer({
           </div>
 
           <div style={styles.footer}>
-            {canToggleBeforeAfter && onToggleBeforeAfter && (
-              <button
-                onClick={onToggleBeforeAfter}
-                style={{
-                  ...styles.beforeAfterBtn,
-                  backgroundColor: showingBefore ? "#0e639c" : "#3e3e42",
-                }}
-              >
-                {showingBefore ? "Showing: Before" : "Compare: Before/After"}
-              </button>
-            )}
             <div style={{ flex: 1 }} />
-            <button onClick={onComplete} style={styles.doneButton}>
-              {isLastStep ? "🎉 Finish Tutorial" : "✅ Mark as Done"}
+            <button onClick={onComplete} style={styles.skipButton}>
+              {isLastStep ? "🎉 Finish Tutorial" : "Skip →"}
             </button>
           </div>
         </div>
@@ -165,6 +168,29 @@ const styles: Record<string, React.CSSProperties> = {
     letterSpacing: "0.5px",
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   },
+  smartSection: {
+    marginBottom: "12px",
+    padding: "10px 12px",
+    backgroundColor: "#1a2a1a",
+    border: "1px solid #2d4a2d",
+    borderRadius: "8px",
+  },
+  smartTitle: {
+    fontSize: "12px",
+    fontWeight: 600,
+    color: "#6a9955",
+    margin: "0 0 8px",
+    textTransform: "uppercase" as const,
+    letterSpacing: "0.5px",
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  },
+  ownIdea: {
+    fontSize: "12px",
+    color: "#6a9955",
+    fontStyle: "italic" as const,
+    margin: "4px 0 0",
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  },
   tipsSection: {
     display: "flex",
     flexDirection: "column" as const,
@@ -182,27 +208,16 @@ const styles: Record<string, React.CSSProperties> = {
     display: "flex",
     justifyContent: "flex-end",
   },
-  beforeAfterBtn: {
+  skipButton: {
     padding: "6px 12px",
-    color: "#d4d4d4",
-    border: "none",
+    backgroundColor: "transparent",
+    color: "#808080",
+    border: "1px solid #3e3e42",
     borderRadius: "4px",
     cursor: "pointer",
     fontSize: "12px",
     fontWeight: 500,
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    transition: "background-color 0.15s ease",
-  },
-  doneButton: {
-    padding: "6px 16px",
-    backgroundColor: "#0e639c",
-    color: "#ffffff",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    fontSize: "13px",
-    fontWeight: 500,
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
-    transition: "background-color 0.15s ease",
+    transition: "color 0.15s ease",
   },
 };

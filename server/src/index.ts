@@ -41,6 +41,33 @@ app.get("/api/files", async (_req, res) => {
   }
 });
 
+// Reset everything: kill PTY, clear workspace files
+app.post("/api/reset", async (_req, res) => {
+  try {
+    console.log("[api] Reset requested — killing sessions and clearing workspace");
+    stopWatching();
+    cleanupAllSessions();
+    // Terminate all WebSocket connections immediately (not graceful close)
+    for (const client of wss.clients) {
+      client.terminate();
+    }
+    // Clear workspace files (but keep CLAUDE.md)
+    const workspaceDir = getWorkspaceDir();
+    const { readdir, rm } = await import("node:fs/promises");
+    const entries = await readdir(workspaceDir);
+    for (const entry of entries) {
+      if (entry === "CLAUDE.md") continue;
+      await rm(`${workspaceDir}/${entry}`, { recursive: true, force: true });
+    }
+    // Wait for PTY processes to fully exit before responding
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    res.json({ status: "ok" });
+  } catch (err) {
+    console.error("[api] Reset error:", err);
+    res.status(500).json({ error: "Reset failed" });
+  }
+});
+
 // WebSocket server for terminal + file events
 const wss = new WebSocketServer({ noServer: true });
 

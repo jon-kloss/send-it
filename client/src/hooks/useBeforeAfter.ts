@@ -2,7 +2,6 @@ import { useState, useCallback, useRef, useEffect } from "react";
 
 interface BeforeAfterState {
   beforeFiles: Record<string, string>;
-  afterFiles: Record<string, string> | null;
   stepId: number | null;
 }
 
@@ -13,39 +12,49 @@ export function useBeforeAfter(
 ) {
   const [state, setState] = useState<BeforeAfterState>({
     beforeFiles: {},
-    afterFiles: null,
     stepId: null,
   });
   const [showingBefore, setShowingBefore] = useState(false);
-  const capturedRef = useRef(false);
+  // Track whether new file changes have happened since the snapshot was taken
+  const filesAtAdvanceRef = useRef<string>("");
 
   // When entering a before/after step, capture "before" snapshot
   useEffect(() => {
     if (hasBeforeAfter && state.stepId !== currentStep) {
       setState({
         beforeFiles: { ...currentFiles },
-        afterFiles: null,
         stepId: currentStep,
       });
       setShowingBefore(false);
-      capturedRef.current = true;
-    }
-    if (!hasBeforeAfter) {
-      // Reset when leaving a before/after step
-      if (state.stepId !== null) {
-        setState({ beforeFiles: {}, afterFiles: null, stepId: null });
-        setShowingBefore(false);
-      }
+      filesAtAdvanceRef.current = "";
     }
   }, [currentStep, hasBeforeAfter]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Capture "after" when step completes (called from onComplete)
+  // When step advances away from a before/after step, snapshot current files
+  // so we can detect when NEW changes happen and clear the toggle
+  useEffect(() => {
+    if (!hasBeforeAfter && state.stepId !== null) {
+      // We just left a before/after step — record what files look like now
+      filesAtAdvanceRef.current = hashFiles(currentFiles);
+    }
+  }, [currentStep]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Clear the snapshot when new file changes happen on a non-before/after step
+  useEffect(() => {
+    if (!hasBeforeAfter && state.stepId !== null && filesAtAdvanceRef.current) {
+      const currentHash = hashFiles(currentFiles);
+      if (currentHash !== filesAtAdvanceRef.current) {
+        // New changes happened — clear the before/after
+        setState({ beforeFiles: {}, stepId: null });
+        setShowingBefore(false);
+        filesAtAdvanceRef.current = "";
+      }
+    }
+  }, [currentFiles, hasBeforeAfter, state.stepId]);
+
   const captureAfter = useCallback(
-    (files: Record<string, string>) => {
-      setState((prev) => ({
-        ...prev,
-        afterFiles: { ...files },
-      }));
+    (_files: Record<string, string>) => {
+      // no-op now — we just keep the before snapshot and compare against live files
     },
     []
   );
@@ -58,7 +67,8 @@ export function useBeforeAfter(
   const displayFiles =
     showingBefore && state.stepId !== null ? state.beforeFiles : currentFiles;
 
-  const canToggle = state.stepId !== null && hasBeforeAfter;
+  // Show toggle as long as we have a snapshot (even after advancing steps)
+  const canToggle = state.stepId !== null;
 
   return {
     displayFiles,
@@ -67,4 +77,11 @@ export function useBeforeAfter(
     toggleBeforeAfter,
     captureAfter,
   };
+}
+
+function hashFiles(files: Record<string, string>): string {
+  const entries = Object.entries(files).sort(([a], [b]) => a.localeCompare(b));
+  return entries
+    .map(([key, val]) => `${key}:${val.length}`)
+    .join("|");
 }

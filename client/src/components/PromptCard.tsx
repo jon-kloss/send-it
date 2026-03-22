@@ -29,7 +29,15 @@ export default function PromptCard({ prompt }: PromptCardProps) {
   }, [prompt.text]);
 
   return (
-    <button onClick={handleCopy} style={styles.card}>
+    <div
+      onClick={handleCopy}
+      role="button"
+      tabIndex={0}
+      style={{
+        ...styles.card,
+        cursor: "pointer",
+      }}
+    >
       <div style={styles.promptText}>{prompt.text}</div>
       <div style={styles.footer}>
         <span style={styles.description}>{prompt.description}</span>
@@ -37,7 +45,7 @@ export default function PromptCard({ prompt }: PromptCardProps) {
           {copied ? "Copied! ✓" : "Click to copy"}
         </span>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -45,17 +53,17 @@ const styles: Record<string, React.CSSProperties> = {
   card: {
     display: "block",
     width: "100%",
-    textAlign: "left",
+    textAlign: "left" as const,
     background: "#2d2d30",
     border: "1px solid #3e3e42",
     borderRadius: "8px",
     padding: "12px 14px",
-    cursor: "pointer",
     transition: "all 0.15s ease",
     color: "#d4d4d4",
-    fontFamily: "inherit",
-    fontSize: "inherit",
+    fontSize: "14px",
     marginBottom: "8px",
+    userSelect: "none" as const,
+    boxSizing: "border-box" as const,
   },
   promptText: {
     fontFamily: '"Cascadia Code", "Fira Code", Menlo, monospace',
@@ -64,12 +72,14 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#ce9178",
     marginBottom: "8px",
     wordBreak: "break-word" as const,
+    pointerEvents: "none" as const,
   },
   footer: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
     fontSize: "12px",
+    pointerEvents: "none" as const,
   },
   description: {
     color: "#808080",

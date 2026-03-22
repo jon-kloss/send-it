@@ -7,6 +7,7 @@ const STORAGE_KEY = "htcgf-tutorial-state";
 
 const DEFAULT_STATE: TutorialState = {
   projectType: null,
+  userName: "",
   currentStep: 1,
   completedSteps: [],
   achievements: [],
@@ -59,8 +60,8 @@ export function useTutorialState() {
     saveState(state);
   }, [state]);
 
-  const setProjectType = useCallback((projectType: ProjectId) => {
-    setState((prev) => ({ ...prev, projectType, currentStep: 1 }));
+  const setProjectType = useCallback((projectType: ProjectId, userName: string) => {
+    setState((prev) => ({ ...prev, projectType, userName, currentStep: 1 }));
   }, []);
 
   const markStepComplete = useCallback(() => {

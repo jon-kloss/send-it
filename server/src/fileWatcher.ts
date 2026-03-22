@@ -20,6 +20,7 @@ const IGNORED_PATTERNS = [
   "**/dist/**",
   "**/package-lock.json",
   "**/.DS_Store",
+  "**/CLAUDE.md",
 ];
 
 const MAX_FILE_SIZE = 1024 * 1024; // 1MB
@@ -186,7 +187,7 @@ export async function readAllFiles(
           continue;
         }
         await scanDir(fullPath);
-      } else if (entry.isFile() && isWatchedFile(entry.name)) {
+      } else if (entry.isFile() && isWatchedFile(entry.name) && entry.name !== "CLAUDE.md") {
         const content = await readFileIfValid(fullPath);
         if (content !== null) {
           files[toSandpackPath(fullPath, workspaceDir)] = content;

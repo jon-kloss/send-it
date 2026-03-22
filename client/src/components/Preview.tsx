@@ -13,41 +13,26 @@ const PLACEHOLDER_FILES = {
   <title>My Website</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { height: 100%; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
       text-align: center;
-      padding: 2rem;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
     }
-    .container {
-      max-width: 500px;
-    }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
-    p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-      line-height: 1.6;
-    }
-    .emoji {
-      font-size: 4rem;
-      margin-bottom: 1rem;
-      display: block;
-    }
+    h1 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    p { font-size: 0.95rem; opacity: 0.9; line-height: 1.5; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <span class="emoji">🚀</span>
+  <div>
     <h1>Your website will appear here</h1>
-    <p>Use the terminal on the left to start building with Claude Code. As you create files, this preview will update in real-time!</p>
+    <p>Use the terminal on the left to start building with Claude Code.</p>
   </div>
 </body>
 </html>`,
@@ -62,6 +47,19 @@ export default function Preview({ files }: PreviewProps) {
 
   return (
     <div style={{ width: "100%", height: "100%", overflow: "hidden" }}>
+      <style>{`
+        .sp-wrapper, .sp-layout, .sp-preview, .sp-preview-container,
+        .sp-preview iframe {
+          height: 100% !important;
+        }
+        .sp-layout {
+          border: none !important;
+          border-radius: 0 !important;
+        }
+        .sp-preview-container {
+          overflow: hidden !important;
+        }
+      `}</style>
       <SandpackProvider
         template="static"
         files={activeFiles}
@@ -69,15 +67,8 @@ export default function Preview({ files }: PreviewProps) {
           recompileMode: "immediate",
         }}
       >
-        <SandpackLayout
-          style={{
-            height: "100%",
-            borderRadius: 0,
-            border: "none",
-          }}
-        >
+        <SandpackLayout>
           <SandpackPreview
-            style={{ height: "100%" }}
             showOpenInCodeSandbox={false}
             showRefreshButton={true}
           />

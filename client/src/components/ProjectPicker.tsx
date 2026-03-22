@@ -1,11 +1,21 @@
+import { useState } from "react";
 import { PROJECTS } from "../tutorial/projects";
 import type { ProjectId } from "../tutorial/types";
 
 interface ProjectPickerProps {
-  onSelect: (projectId: ProjectId) => void;
+  onSelect: (projectId: ProjectId, userName: string) => void;
 }
 
 export default function ProjectPicker({ onSelect }: ProjectPickerProps) {
+  const [name, setName] = useState("");
+
+  const hasName = name.trim().length > 0;
+
+  const handleSelect = (projectId: ProjectId) => {
+    if (!hasName) return;
+    onSelect(projectId, name.trim());
+  };
+
   return (
     <div style={styles.overlay}>
       <div style={styles.container}>
@@ -17,15 +27,32 @@ export default function ProjectPicker({ onSelect }: ProjectPickerProps) {
           </p>
         </div>
 
+        <div style={styles.nameSection}>
+          <label style={styles.nameLabel}>First, what's your name?</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Enter your name"
+            style={styles.nameInput}
+            autoFocus
+          />
+        </div>
+
         <h2 style={styles.question}>What would you like to build?</h2>
 
         <div style={styles.cards}>
           {PROJECTS.map((project) => (
             <button
               key={project.id}
-              onClick={() => onSelect(project.id)}
-              style={styles.card}
+              onClick={() => handleSelect(project.id)}
+              style={{
+                ...styles.card,
+                opacity: hasName ? 1 : 0.35,
+                cursor: hasName ? "pointer" : "default",
+              }}
               onMouseEnter={(e) => {
+                if (!hasName) return;
                 e.currentTarget.style.borderColor = "#569cd6";
                 e.currentTarget.style.transform = "translateY(-2px)";
               }}
@@ -66,7 +93,7 @@ const styles: Record<string, React.CSSProperties> = {
     textAlign: "center",
   },
   header: {
-    marginBottom: "32px",
+    marginBottom: "24px",
   },
   title: {
     fontSize: "36px",
@@ -81,6 +108,30 @@ const styles: Record<string, React.CSSProperties> = {
     lineHeight: "1.6",
     margin: 0,
     fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  },
+  nameSection: {
+    marginBottom: "28px",
+  },
+  nameLabel: {
+    display: "block",
+    fontSize: "15px",
+    fontWeight: 600,
+    color: "#d4d4d4",
+    marginBottom: "8px",
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+  },
+  nameInput: {
+    width: "280px",
+    padding: "10px 16px",
+    backgroundColor: "#2d2d30",
+    border: "2px solid #3e3e42",
+    borderRadius: "8px",
+    color: "#ffffff",
+    fontSize: "16px",
+    textAlign: "center" as const,
+    outline: "none",
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    boxSizing: "border-box" as const,
   },
   question: {
     fontSize: "20px",

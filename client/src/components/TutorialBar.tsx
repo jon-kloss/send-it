@@ -5,6 +5,10 @@ interface TutorialBarProps {
   stepTitle: string;
   completedCount: number;
   achievementCount: number;
+  glossaryCount: number;
+  onReset: () => void;
+  onOpenGlossary: () => void;
+  onOpenAchievements: () => void;
 }
 
 export default function TutorialBar({
@@ -12,6 +16,10 @@ export default function TutorialBar({
   stepTitle,
   completedCount,
   achievementCount,
+  glossaryCount,
+  onReset,
+  onOpenGlossary,
+  onOpenAchievements,
 }: TutorialBarProps) {
   const progressPercent = (completedCount / TOTAL_STEPS) * 100;
 
@@ -23,11 +31,27 @@ export default function TutorialBar({
         </span>
         <span style={styles.title}>{stepTitle}</span>
         <span style={styles.badges}>
-          {achievementCount > 0 && (
-            <span style={styles.badge} title="Achievements earned">
-              🏆 {achievementCount}
-            </span>
-          )}
+          <button
+            onClick={onOpenGlossary}
+            style={styles.glossaryButton}
+            title="Open glossary"
+          >
+            📖 {glossaryCount}
+          </button>
+          <button
+            onClick={onOpenAchievements}
+            style={styles.achievementButton}
+            title="View achievements"
+          >
+            🏆 {achievementCount}
+          </button>
+          <button
+            onClick={onReset}
+            style={styles.resetButton}
+            title="Start over from the beginning"
+          >
+            ↺ Reset
+          </button>
         </span>
       </div>
       <div style={styles.progressTrack}>
@@ -78,10 +102,6 @@ const styles: Record<string, React.CSSProperties> = {
     minWidth: "80px",
     justifyContent: "flex-end",
   },
-  badge: {
-    fontSize: "12px",
-    color: "#d7ba7d",
-  },
   progressTrack: {
     height: "3px",
     backgroundColor: "#3e3e42",
@@ -91,5 +111,38 @@ const styles: Record<string, React.CSSProperties> = {
     backgroundColor: "#569cd6",
     transition: "width 0.4s ease",
     borderRadius: "0 2px 2px 0",
+  },
+  achievementButton: {
+    background: "none",
+    border: "1px solid #3e3e42",
+    borderRadius: "4px",
+    color: "#d7ba7d",
+    fontSize: "11px",
+    padding: "2px 8px",
+    cursor: "pointer",
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    transition: "border-color 0.15s ease",
+  },
+  glossaryButton: {
+    background: "none",
+    border: "1px solid #3e3e42",
+    borderRadius: "4px",
+    color: "#d7ba7d",
+    fontSize: "11px",
+    padding: "2px 8px",
+    cursor: "pointer",
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    transition: "border-color 0.15s ease",
+  },
+  resetButton: {
+    background: "none",
+    border: "1px solid #3e3e42",
+    borderRadius: "4px",
+    color: "#808080",
+    fontSize: "11px",
+    padding: "2px 8px",
+    cursor: "pointer",
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+    transition: "color 0.15s ease, border-color 0.15s ease",
   },
 };

@@ -48,14 +48,18 @@ export function getActiveSessionCount(): number {
 }
 
 export function handleTerminalConnection(ws: WebSocket): void {
+  // If a session already exists (e.g. page refresh), clean up the old one
+  // so the new connection can take over
   if (activeSessions.size >= 1) {
-    const msg: ServerMessage = {
-      type: "error",
-      message: "Session already active. Close the other tab first.",
-    };
-    ws.send(JSON.stringify(msg));
-    ws.close();
-    return;
+    console.log("[pty] Replacing existing session (likely a page refresh)");
+    for (const [oldWs] of activeSessions) {
+      cleanup(oldWs);
+      try {
+        oldWs.close();
+      } catch {
+        // already closed
+      }
+    }
   }
 
   const shell = findShell();
@@ -87,6 +91,7 @@ export function handleTerminalConnection(ws: WebSocket): void {
   console.log(
     `[pty] Session started (pid: ${ptyProcess.pid}, shell: ${shell}, cwd: ${workspaceDir})`
   );
+
 
   ptyProcess.onData((data: string) => {
     if (ws.readyState === WebSocket.OPEN) {
